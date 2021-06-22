@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const MeetingComponent = ({ meeting }) => {
-  const {
-    meeting_id,
-    date,
-    topic,
-    press_release,
-    resolution,
-    record,
-    recording,
-  } = meeting;
+const MeetingComponent = ({ meeting, collapse }) => {
+  const { meeting_id, date, topic, press_release, resolution, record } =
+    meeting;
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [buttonText, setButtonText] = useState('Show More');
@@ -17,6 +10,10 @@ const MeetingComponent = ({ meeting }) => {
   useEffect(() => {
     isCollapsed ? setButtonText('Show More') : setButtonText('Show Less');
   }, [isCollapsed]);
+
+  useEffect(() => {
+    setIsCollapsed(true);
+  }, [collapse]);
 
   return (
     <div className='card mt-3 mb-3 p-5' id={meeting_id}>
@@ -41,15 +38,6 @@ const MeetingComponent = ({ meeting }) => {
                 <a href={record} target='_blank' rel='noppener noreferrer'>
                   <button className='button is-info is-light is-fullwidth'>
                     Meeting Record
-                  </button>
-                </a>
-              </div>
-            )}
-            {!!recording && (
-              <div className='column is-one-quarter'>
-                <a href={recording} target='_blank' rel='noppener noreferrer'>
-                  <button className='button is-info is-light is-fullwidth'>
-                    Web Recording
                   </button>
                 </a>
               </div>

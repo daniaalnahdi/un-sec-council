@@ -98,7 +98,7 @@ const App = () => {
                 //TODO: pass data into meeting components
                 getMeetingVotes(meeting.meeting_id)
               }
-              <MeetingComponent meeting={meeting} />
+              <MeetingComponent meeting={meeting} collapse={yearFilter}/>
             </>
           ))}
         </div>
