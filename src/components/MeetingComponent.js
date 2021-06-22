@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MeetingComponent = ({ meeting }) => {
   const {
@@ -11,15 +11,68 @@ const MeetingComponent = ({ meeting }) => {
     recording,
   } = meeting;
 
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [buttonText, setButtonText] = useState('Show More');
+
+  useEffect(() => {
+    isCollapsed ? setButtonText('Show More') : setButtonText('Show Less');
+  }, [isCollapsed]);
+
   return (
-    <ul id={meeting_id}>
-      <li>Date: {date}</li>
-      <li>Topic: {topic}</li>
-      {!!press_release && <li>Press Release: {press_release}</li>}
-      {!!resolution && <li>Resolution: {press_release}</li>}
-      {!!record && <li>Record: {record}</li>}
-      {!!recording && <li>Recording: {recording}</li>}
-    </ul>
+    <div className='card mt-3 mb-3 p-5' id={meeting_id}>
+      <div className="mb-3">
+        <h3 className='title is-5'>{topic}</h3>
+        <h4 className='subtitle is-6'>{date.substring(0, 10)}</h4>
+      </div>
+      {!isCollapsed && (
+        <div className='columns'>
+          {!!press_release && (
+            <div className='column is-one-quarter'>
+              <a href={press_release} target='_blank' rel='noppener noreferrer'>
+                <button class='button is-info is-light is-fullwidth'>
+                  Press Release
+                </button>
+              </a>
+            </div>
+          )}
+          {!!resolution && (
+            <div className='column is-one-quarter'>
+              <a href={resolution} target='_blank' rel='noppener noreferrer'>
+                <button class='button is-info is-light is-fullwidth'>
+                  Resolution
+                </button>
+              </a>
+            </div>
+          )}
+          {!!record && (
+            <div className='column is-one-quarter'>
+              <a href={record} target='_blank' rel='noppener noreferrer'>
+                <button class='button is-info is-light is-fullwidth'>
+                  Meeting Record
+                </button>
+              </a>
+            </div>
+          )}
+          {!!recording && (
+            <div className='column is-one-quarter'>
+              <a href={recording} target='_blank' rel='noppener noreferrer'>
+                <button class='button is-info is-light is-fullwidth'>
+                  Web Recording
+                </button>
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+      <button
+        className='button is-light'
+        onClick={() => {
+          setIsCollapsed((prevState) => !prevState);
+        }}
+      >
+        {buttonText}
+      </button>
+    </div>
   );
 };
 
