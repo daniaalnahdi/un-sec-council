@@ -25,9 +25,8 @@ app.get('/meetings', (req, res) => {
 });
 
 app.get('/meetings/:id/votes', (req, res) => {
-  //TODO: add vetos
   db.query(
-    'SELECT a.`country_name`, a.`vote` FROM meeting m JOIN attends a USING (meeting_id) WHERE meeting_id = ?',
+    'SELECT a.`country_name`, a.`vote`, a.`veto` FROM meeting m JOIN attends a USING (meeting_id) WHERE meeting_id = ?',
     req.params.id,
     (err, result) => {
       if (err) {
