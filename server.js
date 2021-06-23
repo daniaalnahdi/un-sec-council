@@ -14,10 +14,6 @@ const db = mysql.createPool({
   database: process.env.DB,
 });
 
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('App is listening on port ' + listener.address().port);
-});
-
 app.get('/meetings', (req, res) => {
   db.query('SELECT * FROM meeting', (err, result) => {
     if (err) {
@@ -29,41 +25,44 @@ app.get('/meetings', (req, res) => {
 });
 
 app.get('/meetings/:id/votes', (req, res) => {
-    //TODO: add vetos
-    db.query(
-      'SELECT a.`country_name`, a.`vote` FROM meeting m JOIN attends a USING (meeting_id) WHERE meeting_id = ?',
-      req.params.id,
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(result);
-        }
-      }
-    );
-  });
-
-  app.get('/roster', (req, res) => {
-    db.query('SELECT YEAR(year) FROM roster', (err, result) => {
+  //TODO: add vetos
+  db.query(
+    'SELECT a.`country_name`, a.`vote` FROM meeting m JOIN attends a USING (meeting_id) WHERE meeting_id = ?',
+    req.params.id,
+    (err, result) => {
       if (err) {
         console.log(err);
       } else {
         res.send(result);
       }
-    });
-  });
+    }
+  );
+});
 
-  app.get('/roster/:id/countries', (req, res) => {
-    //TODO: add permanent member
-    db.query(
-      'SELECT cr.`country_name` FROM roster r JOIN country_on_roster cr ON r.`year`=cr.`roster_year` JOIN country c ON cr.`country_name`=c.`name` WHERE YEAR(r.`year`) = ?',
-      req.params.id,
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(result);
-        }
-      }
-    );
+app.get('/roster', (req, res) => {
+  db.query('SELECT year FROM roster ORDER BY year DESC', (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
   });
+});
+
+app.get('/roster/:year/countries', (req, res) => {
+  db.query(
+    'SELECT cr.`country_name`, c.`permanent_member` FROM roster r JOIN country_on_roster cr ON r.`year`=cr.`roster_year` JOIN country c ON cr.`country_name`=c.`name` WHERE r.`year` = ?',
+    req.params.year,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+const listener = app.listen(process.env.PORT || 3000, () => {
+  console.log('App is listening on port ' + listener.address().port);
+});

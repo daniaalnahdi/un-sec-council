@@ -25,26 +25,11 @@ const App = () => {
 
     axios.get(api + '/roster').then((res) => {
       setYearFilterOptions(res.data);
-      //todo: set init year filter as first option
-      console.log('/roster', res.data);
     });
   }, []);
 
-  // apply default filters once data is fetched and when filters change
+  // apply filters once data is fetched and when filters change
   useEffect(() => {
-    filterMeetings();
-  }, [meetings, yearFilter, stringFilter]);
-
-  // update roster when year filter changes
-  useEffect(() => {
-    axios.get(api + `/roster/${yearFilter}/countries`).then((res) => {
-      setRosterCountries(res.data);
-      console.log('/roster/id/countries', res.data);
-    });
-  }, [yearFilter]);
-
-  // function to filter meeting data by date and topic
-  const filterMeetings = () => {
     let result = meetings.filter((meeting) => {
       return (
         meeting.date.includes(yearFilter) &&
@@ -52,11 +37,17 @@ const App = () => {
       );
     });
     setFilteredMeetings(result.reverse());
-  };
+  }, [meetings, yearFilter, stringFilter]);
+
+  // update roster based on year filter changes
+  useEffect(() => {
+    axios.get(api + `/roster/${yearFilter}/countries`).then((res) => {
+      setRosterCountries(res.data);
+    });
+  }, [yearFilter]);
 
   const getMeetingVotes = (meetingId) => {
     axios.get(api + `/meetings/${meetingId}/votes`).then((res) => {
-      //todo: set init year filter as first option
       console.log('/meetings/id/votes', res.data);
     });
   };
@@ -77,20 +68,14 @@ const App = () => {
           <div className='column'>
             <div className='select is-medium'>
               <select onChange={(e) => setYearFilter(e.target.value)}>
-                {
-                  //TODO: populate select options from api yearFilterOptions
-                }
-                <option value='2021'>2021</option>
-                <option value='2020'>2020</option>
-                <option value='2019'>2019</option>
+                {yearFilterOptions.map(({ year }) => (
+                  <option value={year}>{year}</option>
+                ))}
               </select>
             </div>
           </div>
         </div>
-        {
-          //TODO: pass in roster countries via rosterCountries
-        }
-        <RosterComponent year={yearFilter} />
+        <RosterComponent year={yearFilter} countries={rosterCountries} />
         <div className='meetings-list'>
           {filteredMeetings.map((meeting) => (
             <>
@@ -98,7 +83,7 @@ const App = () => {
                 //TODO: pass data into meeting components
                 getMeetingVotes(meeting.meeting_id)
               }
-              <MeetingComponent meeting={meeting} collapse={yearFilter}/>
+              <MeetingComponent meeting={meeting} collapse={yearFilter} />
             </>
           ))}
         </div>
