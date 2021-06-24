@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const MeetingComponent = ({ meeting, api, collapse }) => {
-  const { meeting_id, date, topic, press_release, resolution, record } =
+  const { meeting_id, date, topic, recording, resolution, record } =
     meeting;
 
   const [votes, setVotes] = useState([]);
@@ -51,15 +51,15 @@ const MeetingComponent = ({ meeting, api, collapse }) => {
                 </a>
               </div>
             )}
-            {!!press_release && (
+            {!!recording && (
               <div className='column is-one-quarter'>
                 <a
-                  href={press_release}
+                  href={recording}
                   target='_blank'
                   rel='noppener noreferrer'
                 >
                   <button className='button is-info is-light is-fullwidth'>
-                    Press Release
+                    Media
                   </button>
                 </a>
               </div>
