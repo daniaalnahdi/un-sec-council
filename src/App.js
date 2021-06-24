@@ -52,16 +52,16 @@ const App = () => {
       <div className='container mt-5 mb-5'>
         <div className='mr-4 ml-4'>
           <div className='columns'>
-            <div className='column is-one-quarter'>
+            <div className='column'>
               <input
                 type='text'
-                className='input is-medium is-fullwidth'
+                className='input is-medium'
                 placeholder='Search topic...'
                 onChange={(e) => setStringFilter(e.target.value.toLowerCase())}
               />
             </div>
-            <div className='column'>
-              <div className='select is-medium'>
+            <div className='column is-one-quarter'>
+              <div className='select is-medium is-fullwidth'>
                 <select onChange={(e) => setYearFilter(e.target.value)}>
                   {yearFilterOptions.map(({ year }) => (
                     <option value={year}>{year}</option>
