@@ -46,39 +46,40 @@ const App = () => {
     });
   }, [yearFilter]);
 
-
   return (
     <>
       <HeaderComponent />
       <div className='container mt-5 mb-5'>
-        <div className='columns'>
-          <div className='column'>
-            <input
-              type='text'
-              className='input is-medium'
-              placeholder='Search topic...'
-              onChange={(e) => setStringFilter(e.target.value.toLowerCase())}
-            />
-          </div>
-          <div className='column'>
-            <div className='select is-medium'>
-              <select onChange={(e) => setYearFilter(e.target.value)}>
-                {yearFilterOptions.map(({ year }) => (
-                  <option value={year}>{year}</option>
-                ))}
-              </select>
+        <div className='mr-4 ml-4'>
+          <div className='columns'>
+            <div className='column is-one-quarter'>
+              <input
+                type='text'
+                className='input is-medium is-fullwidth'
+                placeholder='Search topic...'
+                onChange={(e) => setStringFilter(e.target.value.toLowerCase())}
+              />
+            </div>
+            <div className='column'>
+              <div className='select is-medium'>
+                <select onChange={(e) => setYearFilter(e.target.value)}>
+                  {yearFilterOptions.map(({ year }) => (
+                    <option value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-        <RosterComponent year={yearFilter} countries={rosterCountries} />
-        <div className='meetings-list'>
-          {filteredMeetings.map((meeting) => (
-            <MeetingComponent
-              meeting={meeting}
-              collapse={yearFilter}
-              api={api}
-            />
-          ))}
+          <RosterComponent year={yearFilter} countries={rosterCountries} />
+          <div className='meetings-list'>
+            {filteredMeetings.map((meeting) => (
+              <MeetingComponent
+                meeting={meeting}
+                collapse={yearFilter}
+                api={api}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <FooterComponent />
