@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -7,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Connect to database
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -14,6 +16,7 @@ const db = mysql.createPool({
   database: process.env.DB,
 });
 
+// API
 app.get('/meetings', (req, res) => {
   db.query('SELECT * FROM meeting', (err, result) => {
     if (err) {
@@ -92,4 +95,11 @@ app.get('/roster/:year/meetings', (req, res) => {
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('App is listening on port ' + listener.address().port);
+});
+
+// Build 
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
