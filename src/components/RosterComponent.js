@@ -1,7 +1,6 @@
 import React from 'react';
 
 const RosterComponent = ({ year, countries }) => {
-  console.log(countries);
   return (
     <article className='message'>
       <div className='message-body'>

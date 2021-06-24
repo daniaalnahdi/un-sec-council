@@ -46,11 +46,6 @@ const App = () => {
     });
   }, [yearFilter]);
 
-  const getMeetingVotes = (meetingId) => {
-    axios.get(api + `/meetings/${meetingId}/votes`).then((res) => {
-      console.log('/meetings/id/votes', res.data);
-    });
-  };
 
   return (
     <>
@@ -78,13 +73,11 @@ const App = () => {
         <RosterComponent year={yearFilter} countries={rosterCountries} />
         <div className='meetings-list'>
           {filteredMeetings.map((meeting) => (
-            <>
-              {
-                //TODO: pass data into meeting components
-                getMeetingVotes(meeting.meeting_id)
-              }
-              <MeetingComponent meeting={meeting} collapse={yearFilter} />
-            </>
+            <MeetingComponent
+              meeting={meeting}
+              collapse={yearFilter}
+              api={api}
+            />
           ))}
         </div>
       </div>

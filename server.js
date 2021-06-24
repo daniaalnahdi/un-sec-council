@@ -24,6 +24,20 @@ app.get('/meetings', (req, res) => {
   });
 });
 
+app.get('/meetings/:id', (req, res) => {
+  db.query(
+    'SELECT * FROM meeting WHERE meeting_id=?',
+    req.params.id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 app.get('/meetings/:id/votes', (req, res) => {
   db.query(
     'SELECT a.`country_name`, a.`vote`, a.`veto` FROM meeting m JOIN attends a USING (meeting_id) WHERE meeting_id = ?',
@@ -51,6 +65,20 @@ app.get('/roster', (req, res) => {
 app.get('/roster/:year/countries', (req, res) => {
   db.query(
     'SELECT cr.`country_name`, c.`permanent_member` FROM roster r JOIN country_on_roster cr ON r.`year`=cr.`roster_year` JOIN country c ON cr.`country_name`=c.`name` WHERE r.`year` = ?',
+    req.params.year,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+app.get('/roster/:year/meetings', (req, res) => {
+  db.query(
+    'SELECT * FROM roster r JOIN meeting m ON r.`year`= YEAR(m.`date`) WHERE r.`year` = ?',
     req.params.year,
     (err, result) => {
       if (err) {

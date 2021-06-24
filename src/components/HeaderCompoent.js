@@ -5,7 +5,7 @@ const HeaderCompoent = () => {
     <section className='hero is-info'>
       <div className='hero-body'>
         <p className='title'>🇺🇳 United Nations Security Council</p>
-        <p className='subtitle'>Meetings and Resolutions Database</p>
+        <p className='subtitle'>Meetings and Resolutions Database 2012-2021</p>
       </div>
     </section>
   );

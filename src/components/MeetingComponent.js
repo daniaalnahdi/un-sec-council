@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const MeetingComponent = ({ meeting, collapse }) => {
+const MeetingComponent = ({ meeting, api, collapse }) => {
   const { meeting_id, date, topic, press_release, resolution, record } =
     meeting;
 
+  const [votes, setVotes] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [buttonText, setButtonText] = useState('Show More');
+
+  //retrieves meeting votes
+  useEffect(() => {
+    axios.get(api + `/meetings/${meeting_id}/votes`).then((res) => {
+      setVotes(res.data);
+    });
+  }, [meeting_id]);
 
   useEffect(() => {
     isCollapsed ? setButtonText('Show More') : setButtonText('Show Less');
@@ -56,26 +65,71 @@ const MeetingComponent = ({ meeting, collapse }) => {
               </div>
             )}
           </div>
-          <div className='columns'>
-            <div className='column'>
-              <strong>For</strong>
-              <ul>
-                <li>Country Name</li>
-              </ul>
-            </div>
-            <div className='column'>
-              <strong>Against</strong>
-              <ul>
-                <li>Country Name</li>
-              </ul>
-            </div>
-            <div className='column'>
-              <strong>Veto</strong>
-              <ul>
-                <li>Country Name</li>
-              </ul>
-            </div>
-          </div>
+          {!resolution && (
+            <p className='mb-5'>
+              <i>No resolution or votes available.</i>
+            </p>
+          )}
+          {votes.length != 0 && !!resolution && (
+            <>
+              {votes.every(({ vote }) => !vote) ? (
+                <p className='mb-5'>
+                  <i>No votes available.</i>
+                </p>
+              ) : (
+                <div className='columns'>
+                  <div className='column'>
+                    <strong>For</strong>
+                    <ul>
+                      {votes.map(({ country_name, vote }) => {
+                        return (
+                          vote == 'for' && (
+                            <li key={country_name}>{country_name}</li>
+                          )
+                        );
+                      })}
+                    </ul>
+                  </div>
+                  <div className='column'>
+                    <strong>Against</strong>
+                    <ul>
+                      {votes.map(({ country_name, vote }) => {
+                        return (
+                          vote == 'against' && (
+                            <li key={country_name}>{country_name}</li>
+                          )
+                        );
+                      })}
+                    </ul>
+                  </div>
+                  <div className='column'>
+                    <strong>Abstain</strong>
+                    <ul>
+                      {votes.map(({ country_name, vote }) => {
+                        return (
+                          vote == 'abstain' && (
+                            <li key={country_name}>{country_name}</li>
+                          )
+                        );
+                      })}
+                    </ul>
+                  </div>
+                  <div className='column'>
+                    <strong>Veto</strong>
+                    <ul>
+                      {votes.map(({ country_name, veto }) => {
+                        return (
+                          !!veto && (
+                            <li key={country_name}>{country_name}</li>
+                          )
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </>
       )}
       <button
