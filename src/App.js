@@ -7,7 +7,7 @@ import FooterComponent from './components/FooterComponent';
 import MeetingComponent from './components/MeetingComponent';
 
 const App = () => {
-  const api = 'https://un-sec-council.herokuapp.com';
+  const api = 'https://un-security-council-1e6bcb586282.herokuapp.com/';
 
   const [yearFilterOptions, setYearFilterOptions] = useState([]);
   const [rosterCountries, setRosterCountries] = useState([]);
